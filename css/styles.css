@@ -1,0 +1,82 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+#map {
+  width: 100vw;
+  height: 100vh;
+}
+
+.panel {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1000;
+  background: #fff;
+  padding: 12px 14px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  width: 280px;
+  transition: transform 0.25s ease;
+}
+
+.panel.collapsed {
+  transform: translateX(-320px);
+}
+
+.panel h3 {
+  margin: 0 0 8px 0;
+  font-size: 15px;
+}
+
+.panel label {
+  font-size: 12px;
+  font-weight: 600;
+  display: block;
+  margin-top: 6px;
+}
+
+.panel input,
+.panel select,
+.panel button {
+  width: 100%;
+  padding: 6px 8px;
+  margin-top: 4px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 13px;
+}
+
+.panel button {
+  cursor: pointer;
+  background: #1f6feb;
+  color: white;
+  border: none;
+}
+
+.panel button.reset {
+  background: #555;
+  margin-top: 6px;
+}
+
+.contador {
+  font-size: 12px;
+  margin-top: 6px;
+  color: #333;
+}
+
+.filter-toggle {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1100;
+  background: #1f6feb;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
