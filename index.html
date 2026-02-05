@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Mapa Interactivo Productores</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <!-- MarkerCluster -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #map {
+      width: 100vw;
+      height: 100vh;
+    }
+  </style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<!-- MarkerCluster JS -->
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+
+<script>
+  // Crear mapa
+  const map = L.map('map').setView([-42.6, -73.7], 9);
+
+  // Capa base
+const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; OpenStreetMap contributors'
+});
+
+const satelital = L.tileLayer(
+  'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    attribution: 'Tiles &copy; Esri'
+  }
+);
+
+// Capa por defecto
+osm.addTo(map);
+
+const baseMaps = {
+  "Mapa": osm,
+  "Satelital": satelital
+};
+
+L.control.layers(baseMaps, null, { collapsed: false }).addTo(map);
+
+
+  // Grupo de clusters
+  const markers = L.markerClusterGroup();
+
+  // Cargar GeoJSON
+  fetch("./puntos.geojson")
+    .then(res => res.json())
+    .then(data => {
+
+      console.log("Puntos cargados:", data.features.length);
+
+      L.geoJSON(data, {
+        onEachFeature: function(feature, layer) {
+
+          let popup = "<div style='max-height:300px; overflow-y:auto; font-size:13px'>";
+            popup += "<b>Información del predio</b><br><br>";
+
+        for (const key in feature.properties) {
+        popup += `<b>${key}:</b> ${feature.properties[key]}<br>`;
+}
+
+        popup += "</div>";
+
+layer.bindPopup(popup, { autoPan: false });
+
+
+          // 👉 agregar punto al cluster
+          markers.addLayer(layer);
+        }
+      });
+
+      map.addLayer(markers);
+
+    })
+    .catch(err => console.error("Error cargando GeoJSON:", err));
+</script>
+
+</body>
+</html>
